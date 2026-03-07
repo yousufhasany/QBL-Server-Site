@@ -18,13 +18,28 @@ const server = http.createServer(app);
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: [
+      'https://qbl-server-site.vercel.app',
+      'https://qbl-server-site.onrender.com',
+      'http://localhost:3000',
+      'http://localhost:5000',
+    ],
     methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://qbl-server-site.vercel.app',
+    'https://qbl-server-site.onrender.com',
+    'http://localhost:3000',
+    'http://localhost:5000',
+  ],
+  methods: ['GET', 'POST'],
+  credentials: true,
+}));
 app.use(express.json());
 
 // API Routes
