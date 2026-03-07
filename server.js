@@ -15,15 +15,19 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+// Allowed origins for CORS
+const allowedOrigins = [
+  'https://qbl-client-site-wg5o.vercel.app',
+  'https://qbl-server-site.vercel.app',
+  'https://qbl-server-site.onrender.com',
+  'http://localhost:3000',
+  'http://localhost:5000',
+];
+
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: [
-      'https://qbl-server-site.vercel.app',
-      'https://qbl-server-site.onrender.com',
-      'http://localhost:3000',
-      'http://localhost:5000',
-    ],
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -31,12 +35,7 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-  origin: [
-    'https://qbl-server-site.vercel.app',
-    'https://qbl-server-site.onrender.com',
-    'http://localhost:3000',
-    'http://localhost:5000',
-  ],
+  origin: allowedOrigins,
   methods: ['GET', 'POST'],
   credentials: true,
 }));
