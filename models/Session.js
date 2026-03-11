@@ -31,4 +31,6 @@ const sessionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+sessionSchema.index({ teacherId: 1, createdAt: -1 });
+
 module.exports = mongoose.model('Session', sessionSchema);

@@ -21,5 +21,7 @@ const answerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+answerSchema.index({ sessionId: 1, questionId: 1 });
+
 // No student identity stored — answers are anonymous
 module.exports = mongoose.model('Answer', answerSchema);

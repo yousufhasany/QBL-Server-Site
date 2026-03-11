@@ -20,4 +20,6 @@ const questionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+questionSchema.index({ sessionId: 1, questionOrder: 1 });
+
 module.exports = mongoose.model('Question', questionSchema);

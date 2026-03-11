@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const compression = require('compression');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const socketHandler = require('./sockets/socketHandler');
@@ -34,6 +35,7 @@ const io = new Server(server, {
 });
 
 // Middleware
+app.use(compression());
 app.use(cors({
   origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
