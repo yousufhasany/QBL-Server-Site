@@ -44,7 +44,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true,
 }));
-app.options('*', cors({ origin: true }));
+app.options('/*', cors({ origin: true }));
 app.use(express.json());
 
 // API Routes
