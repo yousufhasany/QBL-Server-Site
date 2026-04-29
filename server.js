@@ -19,16 +19,28 @@ const server = http.createServer(app);
 // Allowed origins for CORS
 const allowedOrigins = [
   'https://qbl-client-site-wg5o.vercel.app',
+  'https://qbl-client-site-ujgx.vercel.app',
   'https://qbl-server-site.vercel.app',
   'https://qbl-server-site.onrender.com',
   'http://localhost:3000',
   'http://localhost:5000',
 ];
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  // Allow Vercel preview deployments for this app
+  if (/^https:\/\/qbl-client-site-[a-z0-9-]+\.vercel\.app$/i.test(origin)) return true;
+  return false;
+};
+
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   },
@@ -37,10 +49,14 @@ const io = new Server(server, {
 // Middleware
 app.use(compression());
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true,
 }));
+app.options('*', cors());
 app.use(express.json());
 
 // API Routes
