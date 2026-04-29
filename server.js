@@ -26,21 +26,11 @@ const allowedOrigins = [
   'http://localhost:5000',
 ];
 
-const isAllowedOrigin = (origin) => {
-  if (!origin) return true;
-  if (allowedOrigins.includes(origin)) return true;
-  // Allow Vercel preview deployments for this app
-  if (/^https:\/\/qbl-client-site-[a-z0-9-]+\.vercel\.app$/i.test(origin)) return true;
-  return false;
-};
-
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: (origin, callback) => {
-      if (isAllowedOrigin(origin)) return callback(null, true);
-      return callback(new Error('Not allowed by CORS'));
-    },
+    // Reflect the request origin to avoid Vercel preview domain churn
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   },
@@ -49,14 +39,12 @@ const io = new Server(server, {
 // Middleware
 app.use(compression());
 app.use(cors({
-  origin: (origin, callback) => {
-    if (isAllowedOrigin(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
+  // Reflect the request origin to avoid Vercel preview domain churn
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true,
 }));
-app.options('*', cors());
+app.options('*', cors({ origin: true }));
 app.use(express.json());
 
 // API Routes
